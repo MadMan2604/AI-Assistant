@@ -87,6 +87,30 @@ knowledge_bank = {} # will be filled with info until I can figure out how to eit
 
 wake_word = "friday" # this will activate the ai when said, else the assistant will not do anything
 
+# jokes that the ai will have access to
+jokes_bank = [
+            "Why don't skeletons fight each other? They don't have the guts.",
+            "I told my wife she should embrace her mistakes. She gave me a hug.",
+            "Parallel lines have so much in common. It's a shame they'll never meet.",
+            "Why did the scarecrow win an award? Because he was outstanding in his field.",
+            "I'm reading a book on anti-gravity. It's impossible to put down!",
+            "Why don't scientists trust atoms? Because they make up everything!",
+            "What do you call fake spaghetti? An impasta!",
+            "Why don't eggs tell jokes? They'd crack each other up!",
+            "Did you hear about the claustrophobic astronaut? He needed space.",
+            "I'm on a whiskey diet. I've lost three days already.",
+            "I told my computer I needed a break. Now it won't stop sending me vacation ads.",
+            "Why did the math book look sad? Because it had too many problems.",
+            "I'm reading a horror story in Braille. Something bad is about to happen... I can feel it.",
+            "Why don't skeletons fight each other? They don't have the guts.",
+            "I'm writing a book on reverse psychology. Please don't buy it.",
+            "What do you call a bear with no teeth? A gummy bear!",
+            "I told my wife she should embrace her mistakes. She gave me a hug.",
+            "Why did the bicycle fall over? Because it was two-tired!",
+            "I told my wife she should embrace her mistakes. She gave me a hug.",
+            "Did you hear about the cheese factory that exploded? There was nothing left but de-brie!"
+        ]
+
 # ai assistant GUI layout 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)  # Make the window resizable
@@ -268,8 +292,8 @@ def main():
                     pass
 
                 elif "tell me a joke" in query:
-                    jokes = pyjokes.get_joke(language="en", category="all")
-                    speak(jokes)
+                    jokes = jokes_bank
+                    speak(random.choice(jokes))
 
                 elif "search" in query:
                     query = query.replace("search", "").strip()
