@@ -13,9 +13,9 @@ import pyjokes
 
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
-
-from buttons import Button
-from gui_settings import *
+from pynput.keyboard import Key, Controller as KeyboardController
+from gui_scripts.buttons import Button
+from gui_scripts.gui_settings import *
 
 def speak(text):
     voice = "en-US-AvaNeural"
@@ -45,7 +45,6 @@ def get_web_content(url):
     soup = BeautifulSoup(response.text, 'html.parser')
     return soup.get_text()
 
-import cv2
 
 def capture_and_display():
     cap = cv2.VideoCapture(0)  # Open the built-in camera (index 0)
@@ -111,6 +110,9 @@ jokes_bank = [
             "Did you hear about the cheese factory that exploded? There was nothing left but de-brie!"
         ]
 
+# Create an instance of the keyboard controller
+keyboard = KeyboardController()
+
 # ai assistant GUI layout 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)  # Make the window resizable
@@ -118,13 +120,15 @@ pygame.display.set_caption("AI Assistant")
 clock = pygame.time.Clock()
 
 # ai assistant gui font
-font = pygame.font.Font('Arial.ttf', 16)
+font = pygame.font.Font('fonts/Arial.ttf', 16)
+title_font = pygame.font.Font('fonts/Elianto-Regular.ttf', 60)
+subtitle_font = pygame.font.Font('fonts/PPStellar-Light.otf', 45)
 
 def get_assistant_response(user_input):
     # placeholder function for assistant's response logic
     return "I am your assistant. How can I help you?"
 
-import subprocess
+
 
 def increase_volume(percentage_increase):
     # Get the current volume
@@ -136,7 +140,7 @@ def increase_volume(percentage_increase):
     # Set the new volume level using subprocess
     subprocess.run(["osascript", "-e", f'set volume output volume {new_volume}'])
 
-import subprocess
+
 
 def decrease_volume(percentage_decrease):
     # Get the current volume
@@ -148,7 +152,7 @@ def decrease_volume(percentage_decrease):
     # Set the new volume level using subprocess
     subprocess.run(["osascript", "-e", f'set volume output volume {new_volume}'])
 
-import subprocess
+
 
 def increase_brightness():
     current_brightness = int(subprocess.check_output(['brightness', '-l']).splitlines()[0].split()[-1])
@@ -178,34 +182,47 @@ def display():
     frame_count = len(ai_frames)
     frame_index = 0
 
-    while True:
+    # load the gui title + subtitle texts
+    title_text = title_font.render("AI ASSISTANT", True, WHITE)
+    subtitle_text = subtitle_font.render("Say Friday to Activate", True, WHITE)
+
+    running = True # flag to control the game loop
+
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                running = False 
 
             elif event.type == pygame.VIDEORESIZE:  # Handle window resize event
                 screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
                 WIDTH, HEIGHT = event.w, event.h  # Update WIDTH and HEIGHT variables
                 
         screen.fill((3, 3, 20))  # Adjust background color
-
-        exit_button = Button(screen, BLACK, 1100, 800, 192, 51, "Exit", WHITE, font, hover_colour=WHITE)
-
-        exit_button.draw()
-        if exit_button.is_clicked():
-            pygame.quit()
-
+        
         # Adjust position and size of AI frames dynamically
         frame_size = ai_frames[frame_index].get_size()
         frame_x = (WIDTH - frame_size[0]) // 2
         frame_y = (HEIGHT - frame_size[1]) // 2
         screen.blit(ai_frames[frame_index], (frame_x, frame_y))
 
+        # the exit button to leave the screen
+        exit_button = Button(screen, BLACK, 1100, 800, 192, 51, "Exit", WHITE, font, hover_colour=WHITE)
+
+        exit_button.draw()
+        if exit_button.is_clicked():
+            running = False 
+        
+        # draw the fonts on the screen
+        screen.blit(title_text, (450, 20))
+        screen.blit(subtitle_text, (450, 700))
+
         frame_index = (frame_index + 1) % frame_count
 
         pygame.display.update()
 
         clock.tick(30)
+    
+    pygame.quit()
 
 def main():
     while True:
@@ -312,7 +329,7 @@ def main():
                     remember.write(rememberMessage)
                     remember.close()
 
-                elif "tell me the reminder" in query:
+                elif "tell reminders" in query:
                     remember = open("remember.txt", "r")
                     speak("you told me to remember" + remember.read())
 
@@ -322,22 +339,36 @@ def main():
                     speak("all done all the reminders have been cleared. Anything else?")
 
                 # Add more responses for interacting with tabs, setting timers, etc.
-                elif "switch tab" in query:
+                elif "next tab" in query:
                     speak("Switching tabs now")
-                    pyautogui.hotkey('command', 'tab')  # Simulate Command + Tab key press to switch tabs
+                    with keyboard.pressed(Key.cmd):
+                        keyboard.press(Key.tab)
+                        keyboard.release(Key.tab)
+                
+                elif "previous tab" in query:
+                    speak("Switching tabs now")
+                    with keyboard.pressed(Key.cmd) and keyboard.pressed(Key.shift):
+                        keyboard.pressed(Key.tab)
+                        keyboard.release(Key.tab)
+                        
 
                 elif "close tab" in query:
                     speak("Closing the current tab")
-                    pyautogui.hotkey('command', 'w') # Command + w to close the current tab
+                    with keyboard.pressed(Key.cmd):
+                        keyboard.press('w')
+                        keyboard.release('w')
 
                 elif "swipe right" in query:
                     speak("Swiping to the next window")
-                    pyautogui.hotkey('ctrl', 'right')
-                    
+                    with keyboard.pressed(Key.ctrl):
+                        keyboard.press(Key.right)
+                        keyboard.release(Key.right)
 
                 elif "swipe left" in query:
                     speak("Swipe to the previous window")
-                    pyautogui.hotkey('ctrl', 'left')
+                    with keyboard.pressed(Key.ctrl):
+                        keyboard.press(Key.left)
+                        keyboard.release(Key.left)
                 
                 elif "image" in query:
                     speak("Capturing image for analysis") # outputs the imagge 
