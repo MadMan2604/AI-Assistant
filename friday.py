@@ -22,7 +22,6 @@ def speak(text):
     command = f'edge-tts --voice "{voice}" --text "{text}" --write-media "audio/output.mp3"'
     os.system(command)
     subprocess.run(["afplay", "audio/output.mp3"])  # Use afplay to play the audio on macOS
-
 def take_command():
     r = sr.Recognizer()
     with sr.Microphone() as source:
@@ -107,7 +106,16 @@ jokes_bank = [
             "I told my wife she should embrace her mistakes. She gave me a hug.",
             "Why did the bicycle fall over? Because it was two-tired!",
             "I told my wife she should embrace her mistakes. She gave me a hug.",
-            "Did you hear about the cheese factory that exploded? There was nothing left but de-brie!"
+            "Did you hear about the cheese factory that exploded? There was nothing left but de-brie!",
+            "Why don't scientists trust atoms... Because they make up everything",
+            "Did you hear about the mathematician who's afraid of negative numbers? He'll stop at nothing to avoid them.",
+            "Why did the scarecrow win an award? Because he was outstanding in his field!",
+            "Why couldn't the bicycle stand up by itself? Because it was two-tired!",
+            "Why did the tomato turn red? Because it saw the salad dressing!",
+            "What did one ocean say to the other ocean? Nothing, they just waved!",
+            "Why don't skeletons fight each other? They don't have the guts!",
+            "What did one hat say to the other hat? You stay here, I'll go on ahead!",
+            "Why did the golfer bring two pairs of pants? In case he got a hole in one!"
         ]
 
 # Create an instance of the keyboard controller
@@ -128,8 +136,6 @@ def get_assistant_response(user_input):
     # placeholder function for assistant's response logic
     return "I am your assistant. How can I help you?"
 
-
-
 def increase_volume(percentage_increase):
     # Get the current volume
     current_volume = int(subprocess.check_output(["osascript", "-e", "output volume of (get volume settings)"]).decode("utf-8").strip())
@@ -140,8 +146,6 @@ def increase_volume(percentage_increase):
     # Set the new volume level using subprocess
     subprocess.run(["osascript", "-e", f'set volume output volume {new_volume}'])
 
-
-
 def decrease_volume(percentage_decrease):
     # Get the current volume
     current_volume = int(subprocess.check_output(["osascript", "-e", "output volume of (get volume settings)"]).decode("utf-8").strip())
@@ -151,8 +155,6 @@ def decrease_volume(percentage_decrease):
     
     # Set the new volume level using subprocess
     subprocess.run(["osascript", "-e", f'set volume output volume {new_volume}'])
-
-
 
 def increase_brightness():
     current_brightness = int(subprocess.check_output(['brightness', '-l']).splitlines()[0].split()[-1])
@@ -214,7 +216,7 @@ def display():
         
         # draw the fonts on the screen
         screen.blit(title_text, (450, 20))
-        screen.blit(subtitle_text, (450, 700))
+        screen.blit(subtitle_text, (480, 700))
 
         frame_index = (frame_index + 1) % frame_count
 
@@ -253,6 +255,9 @@ def main():
 
                 elif "what is your name" in query:
                     speak("I am Friday, and i'm ready to help.")
+                
+                elif "assalam alaikum" in query:
+                    speak("Wa Alaikum Assalaam")
 
                 # Add more diverse responses based on context
                 elif "open" in query:
@@ -280,7 +285,7 @@ def main():
                 elif "play" in query:
                     responses = ["Sure, playing that for you!", "Let's get some music going!", "Time for some tunes!"]
                     speak(random.choice(responses))
-                    song_name = query.replace("play", "").strip()
+                    song_name = query.replace("play", " ").strip()
                     # Open YouTube URL for the song in the default web browser
                     webbrowser.open(f"https://www.youtube.com/results?search_query={song_name}")
 
@@ -307,6 +312,10 @@ def main():
                 
                 elif "date" in query:
                     pass
+
+                elif "what is rizz" in query:
+                    speak("Rizz is the ability to charm and woo a person")
+                    speak("Something that CLYDE DOES NOT HAVE")
 
                 elif "tell me a joke" in query:
                     jokes = jokes_bank
@@ -384,11 +393,11 @@ def main():
                 
                 # volume control
                 elif "increase volume" in query:
-                    increase_volume(10)
+                    increase_volume(15)
                     speak("volume increased")
                 
                 elif "decrease volume" in query:
-                    decrease_volume(10)
+                    decrease_volume(15)
                     speak("volume decreased")
                 
                 elif "increase brightness" in query:
