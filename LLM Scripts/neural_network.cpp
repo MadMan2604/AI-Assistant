@@ -89,10 +89,10 @@ int main() {
 
     // Define training data (OR gate)
     vector<VectorXd> inputs = {VectorXd::Zero(inputSize), VectorXd::Zero(inputSize), VectorXd::Zero(inputSize), VectorXd::Zero(inputSize)};
-    inputs  = 1;
-    inputs  = 1;
-    inputs  = 1;
-    inputs  = 1;
+    int inputs  = 1;
+    int inputs  = 1;
+    int inputs  = 1;
+    int inputs  = 1;
 
     vector<VectorXd> targets = {VectorXd::Zero(outputSize), VectorXd::Zero(outputSize), VectorXd::Zero(outputSize), VectorXd::Ones(outputSize)};
 
