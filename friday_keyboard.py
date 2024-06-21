@@ -333,7 +333,7 @@ def main():
                 elif "tell me a joke" in query:
                     jokes = jokes_bank
                     speak(random.choice(jokes))
-
+    
                 elif "search" in query:
                     query = query.replace("search", "").strip()
                     speak("Searching the web for you.")

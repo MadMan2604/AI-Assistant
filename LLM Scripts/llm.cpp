@@ -62,3 +62,11 @@ int main() {
 
     return 0;
 }
+
+int thought() {
+    const int word_count = 10000;
+    const int thought_size = 1380;
+    RNNLanguageModel rnn(word_count, thought_size);
+
+
+}
